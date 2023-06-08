@@ -25,6 +25,8 @@ export default async (req, res) => {
     layout,
     langs_count,
     exclude_repo,
+    size_weight,
+    count_weight,
     custom_title,
     locale,
     border_radius,
@@ -42,10 +44,22 @@ export default async (req, res) => {
     return res.send(renderError("Something went wrong", "Locale not found"));
   }
 
+  if (
+    layout !== undefined &&
+    (typeof layout !== "string" ||
+      !["compact", "normal", "donut", "donut-vertical", "pie"].includes(layout))
+  ) {
+    return res.send(
+      renderError("Something went wrong", "Incorrect layout input"),
+    );
+  }
+
   try {
     const topLangs = await fetchTopLanguages(
       username,
       parseArray(exclude_repo),
+      size_weight,
+      count_weight,
     );
 
     const cacheSeconds = clampValue(

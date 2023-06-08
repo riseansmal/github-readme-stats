@@ -348,7 +348,7 @@ describe("Test renderStatsCard", () => {
       document.querySelector(
         'g[transform="translate(0, 100)"]>.stagger>.stat.bold',
       ).textContent,
-    ).toMatchInlineSnapshot(`"参与项目数 (last year):"`);
+    ).toMatchInlineSnapshot(`"贡献于（去年）:"`);
   });
 
   it("should render without rounding", () => {
@@ -365,5 +365,22 @@ describe("Test renderStatsCard", () => {
     expect(getByTestId(document.body, "commits").textContent).toBe("2k");
     document.body.innerHTML = renderStatsCard(stats, { number_format: "long" });
     expect(getByTestId(document.body, "commits").textContent).toBe("1999");
+  });
+
+  it("should render default rank icon with level A+", () => {
+    document.body.innerHTML = renderStatsCard(stats, {
+      rank_icon: "default",
+    });
+    expect(queryByTestId(document.body, "level-rank-icon")).toBeDefined();
+    expect(
+      queryByTestId(document.body, "level-rank-icon").textContent.trim(),
+    ).toBe("A+");
+  });
+
+  it("should render github rank icon", () => {
+    document.body.innerHTML = renderStatsCard(stats, {
+      rank_icon: "github",
+    });
+    expect(queryByTestId(document.body, "github-rank-icon")).toBeDefined();
   });
 });
