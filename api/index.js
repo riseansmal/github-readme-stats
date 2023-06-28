@@ -37,6 +37,7 @@ export default async (req, res) => {
     number_format,
     border_color,
     rank_icon,
+    show,
   } = req.query;
   res.setHeader("Content-Type", "image/svg+xml");
 
@@ -55,11 +56,14 @@ export default async (req, res) => {
       parseArray(exclude_repo),
     );
 
-    const cacheSeconds = clampValue(
+    let cacheSeconds = clampValue(
       parseInt(cache_seconds || CONSTANTS.FOUR_HOURS, 10),
       CONSTANTS.FOUR_HOURS,
       CONSTANTS.ONE_DAY,
     );
+    cacheSeconds = process.env.CACHE_SECONDS
+      ? parseInt(process.env.CACHE_SECONDS, 10) || cacheSeconds
+      : cacheSeconds;
 
     res.setHeader(
       "Cache-Control",
@@ -92,6 +96,7 @@ export default async (req, res) => {
         locale: locale ? locale.toLowerCase() : null,
         disable_animations: parseBoolean(disable_animations),
         rank_icon,
+        show: parseArray(show),
       }),
     );
   } catch (err) {

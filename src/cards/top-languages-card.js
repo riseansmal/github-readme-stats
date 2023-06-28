@@ -17,6 +17,7 @@ const MIN_CARD_WIDTH = 280;
 const DEFAULT_LANG_COLOR = "#858585";
 const CARD_PADDING = 25;
 const COMPACT_LAYOUT_BASE_HEIGHT = 90;
+const MAXIMUM_LANGS_COUNT = 20;
 
 const NORMAL_LAYOUT_DEFAULT_LANGS_COUNT = 5;
 const COMPACT_LAYOUT_DEFAULT_LANGS_COUNT = 6;
@@ -32,13 +33,13 @@ const DONUT_VERTICAL_LAYOUT_DEFAULT_LANGS_COUNT = 6;
  * Retrieves the programming language whose name is the longest.
  *
  * @param {Lang[]} arr Array of programming languages.
- * @returns {Object} Longest programming language object.
+ * @returns {{ name: string, size: number, color: string }} Longest programming language object.
  */
 const getLongestLang = (arr) =>
   arr.reduce(
     (savedLang, lang) =>
       lang.name.length > savedLang.name.length ? lang : savedLang,
-    { name: "", size: null, color: "" },
+    { name: "", size: 0, color: "" },
   );
 
 /**
@@ -163,14 +164,14 @@ const donutCenterTranslation = (totalLangs) => {
  * Trim top languages to lang_count while also hiding certain languages.
  *
  * @param {Record<string, Lang>} topLangs Top languages.
- * @param {string[]} hide Languages to hide.
- * @param {string} langs_count Number of languages to show.
- * @returns {{topLangs: Record<string, Lang>, totalSize: number}} Trimmed top languages and total size.
+ * @param {number} langs_count Number of languages to show.
+ * @param {string[]=} hide Languages to hide.
+ * @returns {{ langs: Lang[], totalLanguageSize: number }} Trimmed top languages and total size.
  */
-const trimTopLanguages = (topLangs, hide, langs_count) => {
+const trimTopLanguages = (topLangs, langs_count, hide) => {
   let langs = Object.values(topLangs);
   let langsToHide = {};
-  let langsCount = clampValue(parseInt(langs_count), 1, 10);
+  let langsCount = clampValue(langs_count, 1, MAXIMUM_LANGS_COUNT);
 
   // populate langsToHide map for quick lookup
   // while filtering out
@@ -733,8 +734,8 @@ const renderTopLanguages = (topLangs, options = {}) => {
 
   const { langs, totalLanguageSize } = trimTopLanguages(
     topLangs,
+    langs_count,
     hide,
-    String(langs_count),
   );
 
   let width = isNaN(card_width)

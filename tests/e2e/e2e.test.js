@@ -20,7 +20,10 @@ const STATS_DATA = {
   totalIssues: 1,
   totalStars: 1,
   contributedTo: 1,
-  rank: { level: "B", score: 98.50610674501908 },
+  rank: {
+    level: "C",
+    percentile: 97.89377603631637,
+  },
 };
 
 const LANGS_DATA = {
@@ -105,7 +108,7 @@ describe("Fetch Cards", () => {
 
     // Check if stats card from deployment matches the stats card from local.
     expect(serverStatsSvg.data).toEqual(localStatsCardSVG);
-  }, 7000);
+  }, 15000);
 
   test("retrieve language card", async () => {
     expect(VERCEL_PREVIEW_URL).toBeDefined();
@@ -130,7 +133,7 @@ describe("Fetch Cards", () => {
 
     // Check if language card from deployment matches the local language card.
     expect(severLanguageSVG.data).toEqual(localLanguageCardSVG);
-  });
+  }, 15000);
 
   test("retrieve WakaTime card", async () => {
     expect(VERCEL_PREVIEW_URL).toBeDefined();
@@ -150,7 +153,7 @@ describe("Fetch Cards", () => {
 
     // Check if WakaTime card from deployment matches the local WakaTime card.
     expect(serverWakaTimeSvg.data).toEqual(localWakaCardSVG);
-  });
+  }, 15000);
 
   test("retrieve repo card", async () => {
     expect(VERCEL_PREVIEW_URL).toBeDefined();
@@ -172,5 +175,5 @@ describe("Fetch Cards", () => {
 
     // Check if Repo card from deployment matches the local Repo card.
     expect(serverRepoSvg.data).toEqual(localRepoCardSVG);
-  });
+  }, 15000);
 });
